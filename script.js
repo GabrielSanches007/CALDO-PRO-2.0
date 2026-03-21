@@ -1,10 +1,10 @@
 let produtos = JSON.parse(localStorage.getItem('produtos')) || {
-    "TACACÁ": {prod:40, vend:0, custo:7, preco:25},
-    "PINTO": {prod:30, vend:0, custo:4, preco:20},
-    "CARNE": {prod:50, vend:0, custo:6, preco:20}
+    "TACACÁ": {prod:40, vend:0, custo:7, preco:20},
+    "PINTO": {prod:30, vend:0, custo:5, preco:20},
+    "CARNE": {prod:50, vend:0, custo:5, preco:20}
 };
 let vendas = JSON.parse(localStorage.getItem('vendas')) || [];
-let WA = localStorage.getItem('wa') || "5569993123433";
+let WA = localStorage.getItem('wa') || "";
 let carrinho = [];
 
 function salvar(){
@@ -17,59 +17,53 @@ function render(){
     const hoje = new Date().toLocaleDateString("pt-BR");
     const vendasHoje = vendas.filter(v => v.data === hoje);
     
-    let htmlProds = "";
+    // Cards de Venda
+    let htmlVenda = "";
     for(let nome in produtos){
         let p = produtos[nome];
         let disp = p.prod - p.vend;
-        htmlProds += `
-        <div class="card">
-            <div style="display:flex; justify-content:space-between; align-items:center">
+        htmlVenda += `<div class="card">
+            <div style="display:flex; justify-content:space-between">
                 <b>${nome} <br><small>R$ ${p.preco}</small></b>
-                <span class="${disp <= 0 ? 'red-stock' : 'green'}" style="font-size:13px">${disp <= 0 ? 'ESGOTADO' : disp + ' em estoque'}</span>
+                <span style="color:${disp<=0?'red':'#22c55e'}">${disp<=0?'FALTA':disp+' un'}</span>
             </div>
-            <div style="margin:15px 0; font-size:14px; display:flex; align-items:center;">
-                Prod: <input type="number" value="${p.prod}" onchange="alterarProd('${nome}', this.value)" class="input-produzido">
-                <span style="margin-left:12px">Vendidos: <b>${p.vend}</b></span>
+            <div style="margin:15px 0; font-size:14px">
+                Produzido: <input type="number" value="${p.prod}" onchange="produtos['${nome}'].prod=+this.value; salvar(); render();" class="input-produzido">
+                Vendido: ${p.vend}
             </div>
-            <button class="btn-add" ${disp <= 0 ? 'disabled' : ''} onclick="adicionarCarrinho('${nome}')">+ ADICIONAR</button>
+            <button class="btn-add" ${disp<=0?'disabled':''} onclick="adicionarCarrinho('${nome}')">+ ADD</button>
         </div>`;
     }
-    document.getElementById("produtos").innerHTML = htmlProds;
+    document.getElementById("produtos").innerHTML = htmlVenda;
 
-    let fat = vendasHoje.reduce((a,v)=>a+v.preco, 0);
-    let luc = vendasHoje.reduce((a,v)=>a+(v.preco-v.custo), 0);
+    // Métricas
+    let fat = vendasHoje.reduce((a,v)=>a+v.preco,0);
+    let luc = vendasHoje.reduce((a,v)=>a+(v.preco-v.custo),0);
     document.getElementById("fat").innerText = "R$ " + fat;
     document.getElementById("lucro").innerText = "R$ " + luc;
     document.getElementById("dia").innerText = hoje;
 
-    if(vendasHoje.length > 0){
-        document.getElementById("ticket-medio").innerText = "R$ " + (fat/vendasHoje.length).toFixed(2);
-        const horas = vendasHoje.map(v => v.hora.split(':')[0]);
-        const freq = horas.reduce((a,b) => { a[b] = (a[b]||0)+1; return a; }, {});
-        const pico = Object.keys(freq).reduce((a,b) => freq[a] > freq[b] ? a : b);
-        document.getElementById("hora-pico").innerText = pico + ":00h";
-    } else {
-        document.getElementById("ticket-medio").innerText = "R$ 0";
-        document.getElementById("hora-pico").innerText = "--";
-    }
+    // Histórico
+    document.getElementById("historico").innerHTML = vendasHoje.slice(-5).reverse().map(v => 
+        `<div style="display:flex; justify-content:space-between; border-bottom:1px solid #333; padding:5px 0;">
+            <span>${v.hora} - ${v.nome}</span> <span>R$ ${v.preco}</span>
+        </div>`).join('') || "Sem vendas hoje";
 
     renderGestao();
-}
-
-function alterarProd(nome, valor) {
-    produtos[nome].prod = +valor;
-    salvar();
-    render();
 }
 
 function renderGestao(){
     let html = "";
     for(let nome in produtos){
+        let p = produtos[nome];
         html += `<div class="item-gestao">
-            <span>${nome}</span>
-            <div style="display:flex; gap:10px; align-items:center">
-                <small>R$${produtos[nome].preco}</small>
-                <button onclick="removerProduto('${nome}')" class="btn-mini" style="background:none !important; color:var(--danger)">✖</button>
+            <div style="display:flex; justify-content:space-between; margin-bottom:10px">
+                <b style="letter-spacing:1px">${nome}</b>
+                <span onclick="removerProduto('${nome}')" style="color:red; cursor:pointer">✖</span>
+            </div>
+            <div style="display:flex; align-items:center; gap:10px; font-size:14px">
+                Preço: R$ <input type="number" value="${p.preco}" onchange="produtos['${nome}'].preco=+this.value; salvar(); render();" class="input-produzido">
+                Custo: R$ <input type="number" value="${p.custo}" onchange="produtos['${nome}'].custo=+this.value; salvar(); render();" class="input-produzido">
             </div>
         </div>`;
     }
@@ -78,78 +72,56 @@ function renderGestao(){
 
 function adicionarCarrinho(nome){
     let p = produtos[nome];
-    let disp = p.prod - p.vend;
-    let jaNoCart = carrinho.find(i => i.nome === nome);
-    if((jaNoCart ? jaNoCart.quantidade : 0) >= disp) return alert("Estoque máximo atingido!");
-    if(jaNoCart) jaNoCart.quantidade++;
-    else carrinho.push({nome, quantidade: 1, preco: p.preco, custo: p.custo});
+    let jaNo = carrinho.find(i=>i.nome===nome);
+    if((jaNo?jaNo.quantidade:0) >= (p.prod-p.vend)) return alert("Estoque insuficiente!");
+    if(jaNo) jaNo.quantidade++;
+    else carrinho.push({nome, quantidade:1, preco:p.preco, custo:p.custo});
     renderCarrinho();
 }
 
 function renderCarrinho(){
     const cont = document.getElementById("carrinhoContainer");
-    let html = "";
-    carrinho.forEach((p, i) => {
-        html += `<div class="item-carrinho">
-            <span><b>${p.quantidade}x</b> ${p.nome}</span>
-            <div style="display:flex; gap:5px">
+    cont.innerHTML = carrinho.map((p,i)=>`
+        <div style="display:flex; justify-content:space-between; align-items:center; background:#2a2a2a; padding:10px; border-radius:12px; margin-bottom:8px">
+            <span>${p.nome} (R$ ${p.preco*p.quantidade})</span>
+            <div style="display:flex; align-items:center">
                 <button class="btn-mini" onclick="carrinho[${i}].quantidade--; if(carrinho[${i}].quantidade<=0) carrinho.splice(${i},1); renderCarrinho();">➖</button>
+                <b style="width:20px; text-align:center">${p.quantidade}</b>
                 <button class="btn-mini" onclick="adicionarCarrinho('${p.nome}')">➕</button>
             </div>
-        </div>`;
-    });
-    cont.innerHTML = html || "<p style='opacity:0.5; text-align:center'>Seu carrinho está vazio</p>";
-    document.getElementById("cart-count").innerText = carrinho.reduce((a,b)=>a+b.quantidade,0);
+        </div>`).join('');
+    document.getElementById("cart-count").innerText = carrinho.length;
     document.getElementById("btnVenderTudo").disabled = carrinho.length === 0;
 }
 
 function abrirConfirmacao(){
-    let html = ""; let total = 0;
-    carrinho.forEach(i => {
-        total += (i.quantidade * i.preco);
-        html += `<div>• ${i.quantidade}x ${i.nome} - R$ ${i.quantidade * i.preco}</div>`;
-    });
-    document.getElementById("resumoFinal").innerHTML = html + `<hr><b>TOTAL: R$ ${total}</b>`;
+    document.getElementById("resumoFinal").innerHTML = carrinho.map(i=>`• ${i.quantidade}x ${i.nome}`).join('<br>');
     document.getElementById("modalConfirmacao").style.display = "flex";
 }
-
-function fecharConfirmacao(){ document.getElementById("modalConfirmacao").style.display = "none"; }
 
 function venderCarrinho(){
     const data = new Date().toLocaleDateString("pt-BR");
     const hora = new Date().toLocaleTimeString("pt-BR", {hour:'2-digit', minute:'2-digit'});
-    let totalVenda = 0;
-    let msg = `📊 *RELATÓRIO DE VENDA*\n📅 ${data} às ${hora}\n━━━━━━━━━━━\n`;
-
     carrinho.forEach(item => {
-        totalVenda += (item.quantidade * item.preco);
-        msg += `🍲 *${item.nome}* (${item.quantidade}x)\n`;
         for(let i=0; i<item.quantidade; i++){
             produtos[item.nome].vend++;
-            vendas.push({nome: item.nome, preco: item.preco, custo: item.custo, data, hora});
+            vendas.push({nome:item.nome, preco:item.preco, custo:item.custo, data, hora});
         }
     });
-
-    msg += `━━━━━━━━━━━\n💰 *VALOR:* R$ ${totalVenda}\n✅ Venda Finalizada!`;
-    salvar(); fecharConfirmacao(); 
-    window.open(`https://api.whatsapp.com/send?phone=${WA.replace(/\D/g,'')}&text=${encodeURIComponent(msg)}`, "_blank");
-    carrinho = []; renderCarrinho(); render();
+    salvar(); render(); fecharConfirmacao();
+    carrinho = []; renderCarrinho();
+    alert("Venda realizada!");
 }
 
 function adicionarNovoProduto(){
-    let n = prompt("Nome do novo produto:");
-    if(n){
-        let preco = +prompt("Preço de venda:", "20");
-        let custo = +prompt("Preço de custo:", "5");
-        produtos[n.toUpperCase()] = {prod:0, vend:0, custo:custo, preco:preco}; 
-        salvar(); render(); 
-    }
+    let n = prompt("Nome do Caldo:").toUpperCase();
+    if(n) { produtos[n] = {prod:0, vend:0, custo:5, preco:20}; salvar(); render(); }
 }
 
-function removerProduto(n){ if(confirm("Remover "+n+"?")){ delete produtos[n]; salvar(); render(); } }
-function resetarDia(){ if(confirm("Zerar hoje?")){ for(let n in produtos) produtos[n].vend=0; vendas=[]; salvar(); render(); } }
+function removerProduto(n){ if(confirm("Excluir "+n+"?")) { delete produtos[n]; salvar(); render(); } }
+function fecharConfirmacao(){ document.getElementById("modalConfirmacao").style.display = "none"; }
+function resetarDia(){ if(confirm("Resetar tudo?")) { for(let n in produtos) produtos[n].vend=0; vendas=[]; salvar(); render(); } }
 
 document.getElementById("wa").value = WA;
 document.getElementById("wa").onchange = (e) => { WA = e.target.value; salvar(); };
-
 render();
