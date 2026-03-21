@@ -1,75 +1,3 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Caldos Pro - Oficial</title>
-    <style>
-        /* === O CSS ENTRA AQUI (ESTILO) === */
-        :root {
-            --bg: #111;
-            --card: #1f1f1f;
-            --primary: #3b82f6;
-            --success: #22c55e;
-            --danger: #ef4444;
-            --text: #fff;
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background: var(--bg); color: var(--text); margin: 0; padding: 0;
-            display: flex; justify-content: center;
-        }
-
-        .container { 
-            width: 100%; max-width: 400px; padding: 20px; box-sizing: border-box; 
-            display: flex; flex-direction: column;
-        }
-
-        .logo { text-align: center; margin-bottom: 25px; font-size: 24px; letter-spacing: 2px; text-transform: uppercase; font-weight: 900; }
-
-        .card {
-            background: var(--card); padding: 20px; border-radius: 20px; margin-bottom: 20px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3); width: 100%; box-sizing: border-box;
-        }
-
-        .stat { display: flex; justify-content: space-between; margin: 12px 0; font-size: 18px; }
-        .green { color: var(--success); font-weight: 700; }
-        .profit-highlight { background: rgba(34, 197, 94, 0.2); padding: 2px 8px; border-radius: 8px; color: var(--success); font-weight: bold; }
-
-        button {
-            width: 100%; padding: 16px; border: none; border-radius: 15px;
-            font-size: 15px; font-weight: bold; margin-top: 10px; cursor: pointer; transition: all 0.2s ease;
-        }
-
-        button:active { transform: scale(0.97); }
-        .vender { background: var(--success); color: white; }
-        .btn-add { background: var(--primary); color: white; }
-        .reset { background: var(--danger); color: #fff; }
-
-        .input-produzido {
-            width: 65px !important; padding: 6px !important; background: #2a2a2a;
-            border: 1px solid #444; color: white; border-radius: 8px; text-align: center; font-weight: bold;
-        }
-
-        .item-carrinho {
-            display: flex; justify-content: space-between; align-items: center;
-            background: #2a2a2a; padding: 12px; border-radius: 12px; margin-bottom: 8px;
-        }
-
-        .modal {
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.92); z-index: 1000; justify-content: center; align-items: center; backdrop-filter: blur(8px);
-        }
-
-        .modal-content { background: var(--card); padding: 25px; border-radius: 25px; width: 85%; max-width: 320px; text-align: center; }
-        
-        hr { border: 0; border-top: 1px solid #333; margin: 15px 0; }
-        input[type="text"] { width: 100%; padding: 12px; border-radius: 10px; background: #2a2a2a; border: 1px solid #333; color: white; }
-    </style>
-</head>
-<body>
-
 <div class="container">
     <h1 class="logo">🍲 CALDOS PRO</h1>
 
@@ -78,148 +6,39 @@
         <div class="stat"><span>💰 Faturamento</span><span id="fat" class="green">R$ 0</span></div>
         <div class="stat"><span>💸 Lucro Total</span><span id="lucro" class="profit-highlight">R$ 0</span></div>
         <hr>
-        <div class="stat" style="font-size:13px; opacity:0.7"><span>🎯 Ticket Médio</span><span id="ticket-medio">R$ 0</span></div>
-        <div class="stat" style="font-size:13px; opacity:0.7"><span>🔥 Horário Pico</span><span id="hora-pico">--</span></div>
+        <div class="stat" style="font-size:14px; opacity:0.8"><span>🎯 Ticket Médio</span><span id="ticket-medio">R$ 0</span></div>
+        <div class="stat" style="font-size:14px; opacity:0.8"><span>🔥 Horário Pico</span><span id="hora-pico">--</span></div>
     </div>
 
     <div id="produtos"></div>
 
     <div class="card">
-        <h3>🛒 Carrinho <span id="cart-count" style="background:var(--primary); padding:2px 8px; border-radius:10px; font-size:12px">0</span></h3>
+        <h3 style="margin-top:0">🛒 Carrinho <span id="cart-count" class="badge-count">0</span></h3>
         <div id="carrinhoContainer"></div>
         <button id="btnVenderTudo" onclick="abrirConfirmacao()" class="vender" disabled>VENDER TUDO</button>
     </div>
 
     <div class="card">
-        <h3>📦 Gestão e Configurações</h3>
+        <h3 style="margin-top:0">📦 Gestão de Itens</h3>
         <div id="lista-gestao-produtos"></div>
-        <button onclick="adicionarNovoProduto()" class="btn-add" style="background:#8b5cf6; margin-bottom: 15px;">+ NOVO PRODUTO</button>
-        <small>WhatsApp:</small>
-        <input id="wa" type="text" placeholder="5569993123433">
-        <button onclick="resetarDia()" class="reset" style="margin-top:20px">🔄 RESETAR TUDO</button>
+        <button onclick="adicionarNovoProduto()" class="btn-add" style="background:#8b5cf6">+ NOVO CALDO</button>
+    </div>
+
+    <div class="card">
+        <h3 style="margin-top:0">⚙️ Configurações</h3>
+        <small>Número do WhatsApp:</small>
+        <input id="wa" type="text" placeholder="Ex: 5569993123433" class="input-padrao">
+        <button onclick="resetarDia()" class="reset" style="margin-top:20px">🔄 RESETAR DIA</button>
     </div>
 </div>
 
 <div id="modalConfirmacao" class="modal">
     <div class="modal-content">
         <h3>Confirmar Venda? 📝</h3>
-        <div id="resumoFinal" style="text-align:left; margin-bottom:20px; font-size: 14px;"></div>
+        <div id="resumoFinal" style="text-align:left; margin-bottom:20px; font-size: 14px; line-height: 1.6;"></div>
         <div style="display: flex; gap: 10px;">
             <button onclick="venderCarrinho()" class="vender" style="margin:0">SIM ✅</button>
             <button onclick="fecharConfirmacao()" class="reset" style="margin:0">NÃO ❌</button>
         </div>
     </div>
 </div>
-
-<script>
-    /* === O JAVASCRIPT ENTRA AQUI (LÓGICA) === */
-    let produtos = JSON.parse(localStorage.getItem('produtos')) || {
-        "TACACÁ": {prod:40, vend:0, custo:7, preco:25},
-        "PINTO": {prod:30, vend:0, custo:4, preco:20},
-        "CARNE": {prod:50, vend:0, custo:6, preco:20}
-    };
-    let vendas = JSON.parse(localStorage.getItem('vendas')) || [];
-    let WA = localStorage.getItem('wa') || "5569993123433";
-    let carrinho = [];
-
-    function salvar(){
-        localStorage.setItem('produtos', JSON.stringify(produtos));
-        localStorage.setItem('vendas', JSON.stringify(vendas));
-        localStorage.setItem('wa', WA);
-    }
-
-    function render(){
-        const hoje = new Date().toLocaleDateString("pt-BR");
-        const vendasHoje = vendas.filter(v => v.data === hoje);
-        
-        let htmlProds = "";
-        for(let nome in produtos){
-            let p = produtos[nome];
-            let disp = p.prod - p.vend;
-            htmlProds += `<div class="card">
-                <div style="display:flex; justify-content:space-between">
-                    <b>${nome} <br><small>R$ ${p.preco}</small></b>
-                    <span style="font-size:12px; color:${disp<=0?'red':'#22c55e'}">${disp<=0?'ESGOTADO':disp+' un'}</span>
-                </div>
-                <div style="margin:10px 0; font-size:14px">
-                    Prod: <input type="number" value="${p.prod}" onchange="produtos['${nome}'].prod=+this.value; salvar(); render();" class="input-produzido">
-                    Vendidos: ${p.vend}
-                </div>
-                <button class="btn-add" ${disp<=0?'disabled':''} onclick="adicionarCarrinho('${nome}')">+ ADICIONAR</button>
-            </div>`;
-        }
-        document.getElementById("produtos").innerHTML = htmlProds;
-
-        let fat = vendasHoje.reduce((a,v)=>a+v.preco,0);
-        let luc = vendasHoje.reduce((a,v)=>a+(v.preco-v.custo),0);
-        document.getElementById("fat").innerText = "R$ " + fat;
-        document.getElementById("lucro").innerText = "R$ " + luc;
-        document.getElementById("dia").innerText = hoje;
-
-        if(vendasHoje.length > 0) {
-            document.getElementById("ticket-medio").innerText = "R$ " + (fat/vendasHoje.length).toFixed(2);
-        }
-        renderGestao();
-    }
-
-    function renderGestao(){
-        let html = "";
-        for(let nome in produtos) {
-            html += `<div style="display:flex; justify-content:space-between; font-size:12px; background:#2a2a2a; padding:5px 10px; border-radius:8px; margin-bottom:5px">
-                <span>${nome}</span><span onclick="removerProduto('${nome}')" style="color:red">✖</span>
-            </div>`;
-        }
-        document.getElementById("lista-gestao-produtos").innerHTML = html;
-    }
-
-    function adicionarCarrinho(nome){
-        let p = produtos[nome];
-        let jaNo = carrinho.find(i=>i.nome===nome);
-        if((jaNo?jaNo.quantidade:0) >= (p.prod-p.vend)) return alert("Estoque cheio!");
-        if(jaNo) jaNo.quantidade++;
-        else carrinho.push({nome, quantidade:1, preco:p.preco, custo:p.custo});
-        renderCarrinho();
-    }
-
-    function renderCarrinho(){
-        const cont = document.getElementById("carrinhoContainer");
-        cont.innerHTML = carrinho.map((p,i)=>`<div class="item-carrinho"><span>${p.quantidade}x ${p.nome}</span><button onclick="carrinho.splice(${i},1);renderCarrinho();" style="width:30px; padding:5px; margin:0">✖</button></div>`).join('');
-        document.getElementById("cart-count").innerText = carrinho.length;
-        document.getElementById("btnVenderTudo").disabled = carrinho.length === 0;
-    }
-
-    function abrirConfirmacao(){
-        document.getElementById("resumoFinal").innerHTML = carrinho.map(i=>`• ${i.quantidade}x ${i.nome}`).join('<br>');
-        document.getElementById("modalConfirmacao").style.display = "flex";
-    }
-
-    function fecharConfirmacao(){ document.getElementById("modalConfirmacao").style.display = "none"; }
-
-    function venderCarrinho(){
-        const data = new Date().toLocaleDateString("pt-BR");
-        const hora = new Date().toLocaleTimeString("pt-BR", {hour:'2-digit', minute:'2-digit'});
-        carrinho.forEach(item => {
-            for(let i=0; i<item.quantidade; i++){
-                produtos[item.nome].vend++;
-                vendas.push({nome:item.nome, preco:item.preco, custo:item.custo, data, hora});
-            }
-        });
-        salvar(); fecharConfirmacao(); 
-        window.open(`https://api.whatsapp.com/send?phone=${WA}&text=${encodeURIComponent("Venda Realizada!")}`);
-        carrinho = []; renderCarrinho(); render();
-    }
-
-    function adicionarNovoProduto(){
-        let n = prompt("Nome:");
-        if(n) { produtos[n.toUpperCase()] = {prod:0, vend:0, custo:5, preco:20}; salvar(); render(); }
-    }
-
-    function removerProduto(n){ if(confirm("Excluir?")) { delete produtos[n]; salvar(); render(); } }
-    function resetarDia(){ if(confirm("Zerar?")) { for(let n in produtos) produtos[n].vend=0; vendas=[]; salvar(); render(); } }
-
-    document.getElementById("wa").value = WA;
-    document.getElementById("wa").onchange = (e) => { WA = e.target.value; salvar(); };
-    render();
-</script>
-</body>
-</html>
