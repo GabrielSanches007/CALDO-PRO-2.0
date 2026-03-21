@@ -1,11 +1,21 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Caldos Pro - V1.7 Evolution</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
 <div class="container">
     <h1 class="logo">🍲 CALDOS PRO</h1>
 
-    <div class="card">
-        <div class="stat"><span>📅 Hoje</span><span id="dia">--/--</span></div>
+    <div class="card shadow-lg">
+        <div class="stat"><span>📅 Hoje</span><span id="dia">--/--/----</span></div>
         <div class="stat"><span>💰 Faturamento</span><span id="fat" class="green">R$ 0</span></div>
         <div class="stat"><span>💸 Lucro Total</span><span id="lucro" class="profit-highlight">R$ 0</span></div>
-        <hr>
+        <hr style="border:0; border-top:1px solid #333; margin:10px 0;">
         <div class="stat" style="font-size:14px; opacity:0.8"><span>🎯 Ticket Médio</span><span id="ticket-medio">R$ 0</span></div>
         <div class="stat" style="font-size:14px; opacity:0.8"><span>🔥 Horário Pico</span><span id="hora-pico">--</span></div>
     </div>
@@ -13,21 +23,25 @@
     <div id="produtos"></div>
 
     <div class="card">
-        <h3 style="margin-top:0">🛒 Carrinho <span id="cart-count" class="badge-count">0</span></h3>
+        <h3>🛒 Carrinho <span id="cart-count" class="badge-count">0</span></h3>
         <div id="carrinhoContainer"></div>
         <button id="btnVenderTudo" onclick="abrirConfirmacao()" class="vender" disabled>VENDER TUDO</button>
     </div>
 
     <div class="card">
-        <h3 style="margin-top:0">📦 Gestão de Itens</h3>
-        <div id="lista-gestao-produtos"></div>
-        <button onclick="adicionarNovoProduto()" class="btn-add" style="background:#8b5cf6">+ NOVO CALDO</button>
+        <h3>📜 Histórico de Vendas</h3>
+        <div id="historico" style="max-height: 150px; overflow-y: auto; font-size: 14px;"></div>
     </div>
 
     <div class="card">
-        <h3 style="margin-top:0">⚙️ Configurações</h3>
-        <small>Número do WhatsApp:</small>
-        <input id="wa" type="text" placeholder="Ex: 5569993123433" class="input-padrao">
+        <h3>📦 Gestão de Itens</h3>
+        <div id="lista-gestao-produtos"></div>
+        <button onclick="adicionarNovoProduto()" class="btn-add" style="background:#8b5cf6">+ NOVO CALDO / PRODUTO</button>
+    </div>
+
+    <div class="card">
+        <h3>⚙️ Configurações</h3>
+        Número do WhatsApp: <input id="wa" type="text" placeholder="Ex: 5569993123433" class="input-padrao">
         <button onclick="resetarDia()" class="reset" style="margin-top:20px">🔄 RESETAR DIA</button>
     </div>
 </div>
@@ -35,10 +49,14 @@
 <div id="modalConfirmacao" class="modal">
     <div class="modal-content">
         <h3>Confirmar Venda? 📝</h3>
-        <div id="resumoFinal" style="text-align:left; margin-bottom:20px; font-size: 14px; line-height: 1.6;"></div>
+        <div id="resumoFinal" style="text-align:left; margin-bottom:20px; font-size: 14px;"></div>
         <div style="display: flex; gap: 10px;">
             <button onclick="venderCarrinho()" class="vender" style="margin:0">SIM ✅</button>
             <button onclick="fecharConfirmacao()" class="reset" style="margin:0">NÃO ❌</button>
         </div>
     </div>
 </div>
+
+<script src="script.js"></script>
+</body>
+</html>
