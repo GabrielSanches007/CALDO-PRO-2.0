@@ -3,56 +3,91 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Caldos Pro - V1.7 Evolution</title>
+    <title>Caldos Pro - Ember Edition</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<div class="container">
-    <h1 class="logo">🍲 CALDOS PRO</h1>
-
-    <div class="card shadow-lg">
-        <div class="stat"><span>📅 Hoje</span><span id="dia">--/--/----</span></div>
-        <div class="stat"><span>💰 Faturamento</span><span id="fat" class="green">R$ 0</span></div>
-        <div class="stat"><span>💸 Lucro Total</span><span id="lucro" class="profit-highlight">R$ 0</span></div>
-        <hr style="border:0; border-top:1px solid #333; margin:10px 0;">
-        <div class="stat" style="font-size:14px; opacity:0.8"><span>🎯 Ticket Médio</span><span id="ticket-medio">R$ 0</span></div>
-        <div class="stat" style="font-size:14px; opacity:0.8"><span>🔥 Horário Pico</span><span id="hora-pico">--</span></div>
-    </div>
-
-    <div id="produtos"></div>
-
-    <div class="card">
-        <h3>🛒 Carrinho <span id="cart-count" class="badge-count">0</span></h3>
-        <div id="carrinhoContainer"></div>
-        <button id="btnVenderTudo" onclick="abrirConfirmacao()" class="vender" disabled>VENDER TUDO</button>
-    </div>
-
-    <div class="card">
-        <h3>📜 Histórico de Vendas</h3>
-        <div id="historico" style="max-height: 150px; overflow-y: auto; font-size: 14px;"></div>
-    </div>
-
-    <div class="card">
-        <h3>📦 Gestão de Itens</h3>
-        <div id="lista-gestao-produtos"></div>
-        <button onclick="adicionarNovoProduto()" class="btn-add" style="background:#8b5cf6">+ NOVO CALDO / PRODUTO</button>
-    </div>
-
-    <div class="card">
-        <h3>⚙️ Configurações</h3>
-        Número do WhatsApp: <input id="wa" type="text" placeholder="Ex: 5569993123433" class="input-padrao">
-        <button onclick="resetarDia()" class="reset" style="margin-top:20px">🔄 RESETAR DIA</button>
-    </div>
+<div class="ember-background">
+    <div class="ember"></div>
+    <div class="ember"></div>
+    <div class="ember"></div>
+    <div class="spark"></div>
+    <div class="spark"></div>
 </div>
 
-<div id="modalConfirmacao" class="modal">
-    <div class="modal-content">
-        <h3>Confirmar Venda? 📝</h3>
-        <div id="resumoFinal" style="text-align:left; margin-bottom:20px; font-size: 14px;"></div>
-        <div style="display: flex; gap: 10px;">
-            <button onclick="venderCarrinho()" class="vender" style="margin:0">SIM ✅</button>
-            <button onclick="fecharConfirmacao()" class="reset" style="margin:0">NÃO ❌</button>
+<div class="app-container">
+    <header class="app-header">
+        <div class="brand">
+            <h1>Caldos<span>PRO</span></h1>
+            <p id="dia">--/--/----</p>
+        </div>
+        <div class="status-badge"><i class="fa-solid fa-fire-flame-curved"></i> Operação Viva</div>
+    </header>
+
+    <section class="ember-dashboard">
+        <div class="revenue-card">
+            <small class="label">FATURAMENTO HOJE</small>
+            <h2 id="fat">R$ 0,00</h2>
+            <div class="profit-badge">
+                <i class="fa-solid fa-chart-line"></i> Lucro Estimado: <span id="lucro">R$ 0,00</span>
+            </div>
+        </div>
+        <div class="stats-grid">
+            <div class="stat-box">
+                <i class="fa-solid fa-hand-holding-dollar"></i>
+                <small>Ticket Médio</small>
+                <b id="ticket-medio">R$ 0,00</b>
+            </div>
+            <div class="stat-box">
+                <i class="fa-solid fa-clock-rotate-left"></i>
+                <small>Pico</small>
+                <b id="hora-pico">--:--</b>
+            </div>
+        </div>
+    </section>
+
+    <h3 class="section-title"><i class="fa-solid fa-soup"></i> Cardápio e Vendas</h3>
+    <div id="produtos" class="sales-grid"></div>
+
+    <section class="ember-card cart-section">
+        <div class="card-header">
+            <h3><i class="fa-solid fa-basket-shopping"></i> Carrinho</h3>
+            <span id="cart-count" class="badge-count">0</span>
+        </div>
+        <div id="carrinhoContainer" class="cart-items"></div>
+        <button id="btnVenderTudo" onclick="abrirConfirmacao()" class="btn-checkout" disabled>
+            FINALIZAR PEDIDO <i class="fa-solid fa-arrow-right"></i>
+        </button>
+    </section>
+
+    <section class="ember-card management-section">
+        <h3><i class="fa-solid fa-sliders"></i> Gestão de Itens e Preços</h3>
+        <div id="lista-gestao-produtos" class="management-list"></div>
+        <button onclick="adicionarNovoProduto()" class="btn-add-outline">
+            <i class="fa-solid fa-plus-circle"></i> ADICIONAR NOVO ITEM
+        </button>
+    </section>
+
+    <footer class="ember-card settings-footer">
+        <div class="input-group">
+            <i class="fa-brands fa-whatsapp"></i>
+            <input id="wa" type="text" placeholder="WhatsApp p/ Relatórios (55...)">
+        </div>
+        <button onclick="resetarDia()" class="btn-reset">🔄 ZERAR DIA E ESTOQUE VENDIDO</button>
+    </footer>
+</div>
+
+<div id="modalConfirmacao" class="modal-overlay">
+    <div class="modal-box animate-popIn">
+        <i class="fa-solid fa-circle-question" style="font-size: 3rem; color: #f97316;"></i>
+        <h2>Confirmar Venda?</h2>
+        <div id="resumoFinal" class="resumo-scroll"></div>
+        <div class="modal-actions">
+            <button onclick="venderCarrinho()" class="btn-checkout">CONFIRMAR ✅</button>
+            <button onclick="fecharConfirmacao()" class="btn-add-outline" style="border-color:#444; color:#aaa;">CORRIGIR ❌</button>
         </div>
     </div>
 </div>
