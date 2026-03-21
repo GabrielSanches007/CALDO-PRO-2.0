@@ -1,0 +1,34 @@
+{
+  "configuracoes": {
+    "versao": "1.7 Evolution",
+    "whatsapp_destino": "5569993123433",
+    "moeda": "BRL"
+  },
+  "produtos": {
+    "TACACÁ": {
+      "prod": 40,
+      "vend": 0,
+      "custo": 7.00,
+      "preco": 25.00
+    },
+    "PINTO": {
+      "prod": 30,
+      "vend": 0,
+      "custo": 4.00,
+      "preco": 20.00
+    },
+    "CARNE": {
+      "prod": 50,
+      "vend": 0,
+      "custo": 6.00,
+      "preco": 20.00
+    }
+  },
+  "historico_vendas_hoje": [],
+  "metricas_dia": {
+    "faturamento": 0,
+    "lucro": 0,
+    "ticket_medio": 0,
+    "horario_pico": "--:00h"
+  }
+}
