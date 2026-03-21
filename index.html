@@ -1,0 +1,44 @@
+<div class="container">
+    <h1 class="logo">🍲 CALDOS PRO</h1>
+
+    <div class="card">
+        <div class="stat"><span>📅 Hoje</span><span id="dia">--/--</span></div>
+        <div class="stat"><span>💰 Faturamento</span><span id="fat" class="green">R$ 0</span></div>
+        <div class="stat"><span>💸 Lucro Total</span><span id="lucro" class="profit-highlight">R$ 0</span></div>
+        <hr>
+        <div class="stat" style="font-size:14px; opacity:0.8"><span>🎯 Ticket Médio</span><span id="ticket-medio">R$ 0</span></div>
+        <div class="stat" style="font-size:14px; opacity:0.8"><span>🔥 Horário Pico</span><span id="hora-pico">--</span></div>
+    </div>
+
+    <div id="produtos"></div>
+
+    <div class="card">
+        <h3 style="margin-top:0">🛒 Carrinho <span id="cart-count" class="badge-count">0</span></h3>
+        <div id="carrinhoContainer"></div>
+        <button id="btnVenderTudo" onclick="abrirConfirmacao()" class="vender" disabled>VENDER TUDO</button>
+    </div>
+
+    <div class="card">
+        <h3 style="margin-top:0">📦 Gestão de Itens</h3>
+        <div id="lista-gestao-produtos"></div>
+        <button onclick="adicionarNovoProduto()" class="btn-add" style="background:#8b5cf6">+ NOVO CALDO</button>
+    </div>
+
+    <div class="card">
+        <h3 style="margin-top:0">⚙️ Configurações</h3>
+        <small>Número do WhatsApp:</small>
+        <input id="wa" type="text" placeholder="Ex: 5569993123433" class="input-padrao">
+        <button onclick="resetarDia()" class="reset" style="margin-top:20px">🔄 RESETAR DIA</button>
+    </div>
+</div>
+
+<div id="modalConfirmacao" class="modal">
+    <div class="modal-content">
+        <h3>Confirmar Venda? 📝</h3>
+        <div id="resumoFinal" style="text-align:left; margin-bottom:20px; font-size: 14px; line-height: 1.6;"></div>
+        <div style="display: flex; gap: 10px;">
+            <button onclick="venderCarrinho()" class="vender" style="margin:0">SIM ✅</button>
+            <button onclick="fecharConfirmacao()" class="reset" style="margin:0">NÃO ❌</button>
+        </div>
+    </div>
+</div>
