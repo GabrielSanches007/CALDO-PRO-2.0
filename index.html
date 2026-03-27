@@ -3,91 +3,125 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Caldos Pro - Ember Edition</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <title>Caldos Pro | Ember Edition</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
 <div class="ember-background">
-    <div class="ember"></div>
-    <div class="ember"></div>
-    <div class="ember"></div>
-    <div class="spark"></div>
-    <div class="spark"></div>
+    <div class="ember"></div><div class="ember"></div><div class="ember"></div>
 </div>
 
+<div id="sidebarAdmin" class="sidebar">
+    <div class="sidebar-header">
+        <div class="tabs-nav">
+            <button onclick="mudarAba('historico')" id="tab-h" class="tab-btn active">HISTÓRICO</button>
+            <button onclick="mudarAba('gestao')" id="tab-g" class="tab-btn">GESTÃO</button>
+            <button onclick="mudarAba('relatorio')" id="tab-r" class="tab-btn">RELATÓRIO</button>
+        </div>
+        <button onclick="toggleSidebar()" class="btn-close-sidebar" style="background:none; border:none;"><i class="fa-solid fa-xmark" style="color:#5e5e6e; cursor:pointer"></i></button>
+    </div>
+
+    <div id="aba-historico" class="sidebar-content active">
+        <div id="resumo-sidebar-lucro" style="margin-bottom: 20px;"></div>
+        <div id="lista-historico" class="custom-scroll"></div>
+    </div>
+
+    <div id="aba-gestao" class="sidebar-content">
+        <div class="management-section">
+            <h3 class="section-title" style="margin-top:0">Configuração de Itens</h3>
+            <div id="lista-gestao-produtos" class="management-list"></div>
+            <button onclick="adicionarNovoProduto()" class="btn-add-outline">
+                <i class="fa-solid fa-plus"></i> NOVO PRODUTO
+            </button>
+            <hr style="border: 0; border-top: 1px solid #333; margin: 30px 0;">
+            <div class="config-footer">
+                <input id="wa" type="text" placeholder="WhatsApp (55...)">
+                <button onclick="resetarDia()" class="btn-reset">🔄 ZERAR TUDO HOJE</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="aba-relatorio" class="sidebar-content">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+            <h3 class="section-title" style="margin:0">Relatórios Salvos</h3>
+            <button onclick="resetarRelatorioMensal()" style="background:none; border:none; color:var(--danger); font-size:10px; font-weight:800; cursor:pointer">LIMPAR TUDO</button>
+        </div>
+        <div id="lista-relatorios-dias" class="custom-scroll"></div>
+    </div>
+</div>
+
+<div id="overlay" class="overlay" onclick="toggleSidebar()"></div>
+
 <div class="app-container">
-    <header class="app-header">
+    <header class="app-header animate-popIn">
         <div class="brand">
             <h1>Caldos<span>PRO</span></h1>
-            <p id="dia">--/--/----</p>
+            <span id="dia" class="date-badge">--/--/----</span>
         </div>
-        <div class="status-badge"><i class="fa-solid fa-fire-flame-curved"></i> Operação Viva</div>
+        <div class="header-actions">
+            <button onclick="toggleSidebar()" class="btn-admin-toggle">
+                <i class="fa-solid fa-bars-staggered"></i> MENU
+            </button>
+            <div class="status-badge"><i class="fa-solid fa-circle-check"></i> ONLINE</div>
+        </div>
     </header>
 
-    <section class="ember-dashboard">
+    <section class="ember-dashboard animate-popIn">
         <div class="revenue-card">
-            <small class="label">FATURAMENTO HOJE</small>
-            <h2 id="fat">R$ 0,00</h2>
-            <div class="profit-badge">
-                <i class="fa-solid fa-chart-line"></i> Lucro Estimado: <span id="lucro">R$ 0,00</span>
+            <p class="label">FATURAMENTO HOJE</p>
+            <h2 id="fat" class="pulse-text">R$ 0,00</h2>
+            <div class="profit-chip">
+                <i class="fa-solid fa-chart-line"></i> Lucro: <span id="lucro">R$ 0,00</span>
             </div>
         </div>
         <div class="stats-grid">
             <div class="stat-box">
-                <i class="fa-solid fa-hand-holding-dollar"></i>
+                <i class="fa-solid fa-bolt"></i>
                 <small>Ticket Médio</small>
                 <b id="ticket-medio">R$ 0,00</b>
             </div>
             <div class="stat-box">
-                <i class="fa-solid fa-clock-rotate-left"></i>
+                <i class="fa-solid fa-fire"></i>
                 <small>Pico</small>
                 <b id="hora-pico">--:--</b>
             </div>
         </div>
     </section>
 
-    <h3 class="section-title"><i class="fa-solid fa-soup"></i> Cardápio e Vendas</h3>
+    <h3 class="section-title"><i class="fa-solid fa-bowl-food"></i> Cardápio de Vendas</h3>
     <div id="produtos" class="sales-grid"></div>
 
-    <section class="ember-card cart-section">
+    <section class="ember-card cart-section animate-popIn">
         <div class="card-header">
             <h3><i class="fa-solid fa-basket-shopping"></i> Carrinho</h3>
             <span id="cart-count" class="badge-count">0</span>
         </div>
-        <div id="carrinhoContainer" class="cart-items"></div>
+        <div id="carrinhoContainer" class="cart-items custom-scroll"></div>
+        <div class="payment-section">
+            <p class="tiny-label">MÉTODO DE RECEBIMENTO</p>
+            <div class="pay-selector">
+                <button onclick="setPagamento('PIX')" id="pay-PIX" class="pay-btn active">PIX</button>
+                <button onclick="setPagamento('DINHEIRO')" id="pay-DINHEIRO" class="pay-btn">DIN</button>
+                <button onclick="setPagamento('CARTÃO')" id="pay-CARTÃO" class="pay-btn">CARD</button>
+            </div>
+        </div>
         <button id="btnVenderTudo" onclick="abrirConfirmacao()" class="btn-checkout" disabled>
             FINALIZAR PEDIDO <i class="fa-solid fa-arrow-right"></i>
         </button>
     </section>
-
-    <section class="ember-card management-section">
-        <h3><i class="fa-solid fa-sliders"></i> Gestão de Itens e Preços</h3>
-        <div id="lista-gestao-produtos" class="management-list"></div>
-        <button onclick="adicionarNovoProduto()" class="btn-add-outline">
-            <i class="fa-solid fa-plus-circle"></i> ADICIONAR NOVO ITEM
-        </button>
-    </section>
-
-    <footer class="ember-card settings-footer">
-        <div class="input-group">
-            <i class="fa-brands fa-whatsapp"></i>
-            <input id="wa" type="text" placeholder="WhatsApp p/ Relatórios (55...)">
-        </div>
-        <button onclick="resetarDia()" class="btn-reset">🔄 ZERAR DIA E ESTOQUE VENDIDO</button>
-    </footer>
 </div>
 
 <div id="modalConfirmacao" class="modal-overlay">
     <div class="modal-box animate-popIn">
-        <i class="fa-solid fa-circle-question" style="font-size: 3rem; color: #f97316;"></i>
-        <h2>Confirmar Venda?</h2>
-        <div id="resumoFinal" class="resumo-scroll"></div>
+        <i class="fa-solid fa-circle-check" style="font-size: 3.5rem; color: var(--success); margin-bottom: 15px; display: block;"></i>
+        <h2>Confirmar Pedido?</h2>
+        <div id="resumoFinal" class="resumo-scroll" style="margin: 15px 0; color: #ccc;"></div>
         <div class="modal-actions">
             <button onclick="venderCarrinho()" class="btn-checkout">CONFIRMAR ✅</button>
-            <button onclick="fecharConfirmacao()" class="btn-add-outline" style="border-color:#444; color:#aaa;">CORRIGIR ❌</button>
+            <button onclick="fecharConfirmacao()" class="btn-mini" style="margin-top: 10px; width: 100%;">VOLTAR</button>
         </div>
     </div>
 </div>
